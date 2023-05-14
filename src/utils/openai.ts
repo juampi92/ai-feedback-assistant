@@ -1,7 +1,9 @@
 import { writable } from "svelte/store";
 import axios from "axios";
 
+import type { FeedbackType } from "../types";
 import helperQuestionsPrompt from "../prompts/helper-questions";
+import feedbackPrompt from "../prompts/feedback";
 
 export const openAIKey = writable("");
 let openAIKeyValue: string;
@@ -17,13 +19,15 @@ async function sleep(seconds: number) {
     );
 }
 
-type FeedbackType = {
-    feedback: string;
-};
+export async function getFeedback(params: FeedbackType) {
 
-export async function getFeedback({
-    feedback,
-}: FeedbackType) {
+    const prompt = feedbackPrompt(params);
+
+    console.log(`[Debug] Prompt: ${prompt}`);
+
+    await sleep(1);
+
+    return prompt;
 
     // const response = await axios.post(
     //   "https://api.openai.com/v1/engines/davinci-codex/completions",

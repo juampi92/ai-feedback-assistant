@@ -7,8 +7,9 @@
         getHelperQuestions,
     } from "../utils/openai";
     import Section from "../components/Section.svelte";
+    import seeder from "../utils/seed";
 
-    let feedback = writable("");
+    let feedback = "";
 
     // Background Section
     let yourRole = "";
@@ -60,23 +61,39 @@
         $openAIKey.length ? "text-green-500" : ""
     );
 
-    const isButtonDisabled = derived(
-        [openAIKey, feedback, isLoading],
-        ([$openAIKey, $feedback, $isLoading]) =>
-            !$openAIKey || !$feedback || $isLoading
-    );
-
     async function handleSubmit() {
         isLoading.set(true);
 
         try {
-            const response = await getFeedback({ openAIKey, feedback });
+            const response = await getFeedback({
+                yourRole,
+                theirRole,
+                feedback,
+                background,
+                selectedFramework,
+                selectedStructure,
+                customStructure,
+                selectedTone,
+            });
             results.set(response);
         } catch (error) {
             alert(error.message);
         } finally {
             isLoading.set(false);
         }
+    }
+
+    function seed() {
+        const newSeed = seeder();
+
+        yourRole = newSeed.yourRole;
+        theirRole = newSeed.theirRole;
+        background = newSeed.background;
+        feedback = newSeed.feedback;
+        selectedFramework = newSeed.selectedFramework;
+        selectedStructure = newSeed.selectedStructure;
+        customStructure = newSeed.customStructure;
+        selectedTone = newSeed.selectedTone;
     }
 </script>
 
@@ -87,7 +104,7 @@
                 AI Feedback Assistant
             </h1>
             <a
-                href="https://github.com/juampi92/ai-feedback"
+                href="https://github.com/juampi92/ai-feedback-assistant"
                 target="_blank"
                 rel="noopener noreferrer"
             >
@@ -143,6 +160,8 @@
                     {/if}
                 </label>
             </Section>
+
+            <a href="#" on:click|preventDefault={seed}>Seed</a>
 
             <Section
                 title="Background / Motive <small class='text-gray-400'>(optional)</small>"
@@ -267,14 +286,16 @@
                             your thoughts out of your head.
                         </p>
 
-                        <p class="mx-4 text-sm font-mono" style="white-space: pre-line">
+                        <p
+                            class="mx-4 text-sm font-mono whitespace-pre-line"
+                        >
                             {helperQuestions}
                         </p>
                     </div>
                 {/if}
 
                 <textarea
-                    bind:value={$feedback}
+                    bind:value={feedback}
                     class="h-40 block w-full p-2 border border-gray-300 rounded"
                     placeholder="Start writing your feedback here..."
                 />
@@ -282,9 +303,11 @@
 
             <Section title="" styles={$openAIKey ? "" : "opacity-80"}>
                 <button
-                    disabled={$isButtonDisabled}
+                    disabled={!$openAIKey || feedback.length < 10 || $isLoading}
                     on:click={handleSubmit}
-                    class="block w-full p-2 text-white bg-blue-500 rounded {$isButtonDisabled
+                    class="block w-full p-2 text-white bg-blue-500 rounded {!$openAIKey ||
+                    feedback.length < 10 ||
+                    $isLoading
                         ? 'opacity-50'
                         : ''}"
                 >
@@ -296,7 +319,7 @@
                 </button>
 
                 {#if $results}
-                    <p>{$results}</p>
+                    <p class="whitespace-pre-line">{$results}</p>
                 {/if}
             </Section>
         </main>

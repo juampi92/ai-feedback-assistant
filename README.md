@@ -1,4 +1,4 @@
-# sbi-feedback
+# ai-feedback-assistant
 A simple OpenAI implementation to give SBI feedback
 
 ## Run
