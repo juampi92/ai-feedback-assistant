@@ -133,7 +133,7 @@
 </script>
 
 <div class="py-16 white">
-    <div class="container m-auto px-12 text-gray-600">
+    <div class="container m-auto px-4 md:px-12 text-gray-600">
         <header class="flex justify-between p-0 text-center">
             <h1 class="mb-12 text-gray-900 font-bold text-4xl">
                 AI Feedback Assistant
