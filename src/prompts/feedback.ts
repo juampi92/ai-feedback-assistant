@@ -19,18 +19,28 @@ function getFormat(selectedStructure: string, customStructure: string | null): s
 }
 
 export default function (params: FeedbackType): string {
-    const background: string | null = params.background ? ` Also consider they are requesting the following: "${params.background}".` : null;
-    const framework: string | null = (params.selectedFramework !== 'Auto') ? ` The feedback should be structured using the ${params.selectedFramework} framework as much as possible.` : null;
-    const tone: string | null = params.selectedTone ? ` The feedback should be ${params.selectedTone}.` : null;
+    const background: string = params.background ? `
+Also consider they are requesting the following: "${params.background}".
+` : '';
+    const framework: string = (params.selectedFramework !== 'Auto') ? `
+The feedback should be structured using the ${params.selectedFramework} framework as much as possible.` : '';
 
-    const format: string | null = getFormat(params.selectedStructure, params.customStructure);
+    const format: string = getFormat(params.selectedStructure, params.customStructure);
 
-    return [
-        `As a ${params.yourRole}, I am providing feedback to my colleague who is a ${params.theirRole}.`,
-        `Given the following raw feedback about my colleague: "${params.feedback}", structure a feedback that is constructive and useful.`,
-        background,
-        framework,
-        tone,
-        format,
-    ].filter(Boolean).join(' ');
+    return `You are a feedback specialist, and you are going to help me write feedback for my colleagues based on my informal notes.
+
+As a ${params.yourRole}, I am providing feedback to my colleague who is: ${params.theirRole}.
+
+I will now describe my colleague and you would make a concise feedback that is useful.
+The feedback should be ${params.selectedTone}. 
+Format the text using ${format}.
+${background}${framework}
+My notes:
+
+\`\`\`
+${params.feedback}
+\`\`\`
+
+Formatted feedback:
+`;
 }
