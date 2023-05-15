@@ -1,6 +1,6 @@
 <script>
     import { derived, writable } from "svelte/store";
-    
+
     import copy from "../utils/copy";
     import feedbackPrompt from "../prompts/feedback";
 
@@ -103,7 +103,7 @@
         copy(prompt);
 
         setTimeout(() => {
-          isCopied = false;
+            isCopied = false;
         }, 2000);
     }
 
@@ -159,9 +159,6 @@
 
         <main class="grid gap-8">
             <Section title="Configuration">
-                <p class="text-gray-400">
-                    This is some content for the second section.
-                </p>
                 <label
                     class="justify-between cursor-pointer"
                     on:click={() => ($showKeyInput = true)}
@@ -196,7 +193,16 @@
                 </label>
             </Section>
 
-            <a href="#" on:click|preventDefault={seed}>Seed</a>
+            <div>
+                <button
+                    class="bg-transparent px-3 py-1 border border-gray-500 text-gray-500 rounded-none float-right ml-5"
+                    on:click|preventDefault={clear}>Clear</button
+                >
+                <button
+                    class="bg-transparent px-3 py-1 border border-purple-500 text-purple-500 rounded-none float-right"
+                    on:click|preventDefault={seed}>Seed fake data</button
+                >
+            </div>
 
             <Section
                 title="Background / Motive <small class='text-gray-400'>(optional)</small>"
@@ -219,8 +225,11 @@
                 </div>
                 <div>
                     <p class="text-gray-500 text-sm mb-3">
-                        Provide any requests from your colleague. Only fill this
-                        if your colleague asked for a specific feedback.
+                        Use this space to specificy the feedback your colleague
+                        wants from you. This space will guide the feedback
+                        generation, but it's not mandatory.
+                        <br />If empty, the feedback will be about the entire
+                        person.
                     </p>
                     <textarea
                         bind:value={background}
@@ -309,7 +318,7 @@
                     {#if !helperQuestionsLoading}
                         Feel stuck? Get some helper questions!
                     {:else}
-                        Loading...
+                        Generating...
                     {/if}
                 </a>
 
@@ -321,10 +330,14 @@
                             your thoughts out of your head.
                         </p>
 
-                        <p
-                            class="mx-4 text-sm font-mono whitespace-pre-line"
-                        >
+                        <p class="mx-4 text-sm font-mono whitespace-pre-line">
                             {helperQuestions}
+                        </p>
+
+                        <p class="text-gray-500 text-sm mb-3">
+                            <b>Important:</b> the questions won't be sent to GPT,
+                            so you shouldn't reference. Instead, include the question
+                            in the answer.
                         </p>
                     </div>
                 {/if}
