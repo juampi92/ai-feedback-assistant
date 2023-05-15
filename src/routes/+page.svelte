@@ -1,5 +1,8 @@
 <script>
     import { derived, writable } from "svelte/store";
+    
+    import copy from "../utils/copy";
+    import feedbackPrompt from "../prompts/feedback";
 
     import {
         openAIKey,
@@ -81,6 +84,38 @@
         } finally {
             isLoading.set(false);
         }
+    }
+
+    let isCopied = false;
+    function copyToClipboard() {
+        const prompt = feedbackPrompt({
+            yourRole,
+            theirRole,
+            feedback,
+            background,
+            selectedFramework,
+            selectedStructure,
+            customStructure,
+            selectedTone,
+        });
+
+        isCopied = true;
+        copy(prompt);
+
+        setTimeout(() => {
+          isCopied = false;
+        }, 2000);
+    }
+
+    function clear() {
+        yourRole = "";
+        theirRole = "";
+        background = "";
+        feedback = "";
+        selectedFramework = "Auto";
+        selectedStructure = "Third Person Message";
+        customStructure = "";
+        selectedTone = "Casual";
     }
 
     function seed() {
@@ -301,22 +336,47 @@
                 />
             </Section>
 
-            <Section title="" styles={$openAIKey ? "" : "opacity-80"}>
-                <button
-                    disabled={!$openAIKey || feedback.length < 10 || $isLoading}
-                    on:click={handleSubmit}
-                    class="block w-full p-2 text-white bg-blue-500 rounded {!$openAIKey ||
-                    feedback.length < 10 ||
-                    $isLoading
-                        ? 'opacity-50'
-                        : ''}"
-                >
-                    {#if $isLoading}
-                        Loading...
-                    {:else}
-                        Generate Feedback using GPT
-                    {/if}
-                </button>
+            <Section
+                title=""
+                styles={!$openAIKey || feedback.length < 10 || $isLoading
+                    ? "opacity-50"
+                    : ""}
+            >
+                <div class="flex">
+                    <button
+                        class="
+                            flex items-center justify-center px-4 py-2 bg-gray-200 rounded-l
+                        "
+                        on:click={copyToClipboard}
+                        title="Copy full prompt to clipboard"
+                    >
+                        <svg
+                            class="h-4 w-4 fill-black transition-colors duration-200"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                            class:fill-green-800={isCopied}
+                            class:duration-500={!isCopied}
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M4 2a2 2 0 00-2 2v9a2 2 0 002 2h2v2a2 2 0 002 2h9a2 2 0 002-2V8a2 2 0 00-2-2h-2V4a2 2 0 00-2-2H4zm9 4V4H4v9h2V8a2 2 0 012-2h5zM8 8h9v9H8V8z"
+                            />
+                        </svg>
+                    </button>
+                    <button
+                        disabled={!$openAIKey ||
+                            feedback.length < 10 ||
+                            $isLoading}
+                        on:click={handleSubmit}
+                        class="flex-1 px-4 py-2 bg-blue-500 text-white rounded-r"
+                    >
+                        {#if $isLoading}
+                            Generating...
+                        {:else}
+                            Generate Feedback using GPT
+                        {/if}
+                    </button>
+                </div>
 
                 {#if $results}
                     <p class="whitespace-pre-line">{$results}</p>
