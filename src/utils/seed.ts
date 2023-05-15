@@ -39,10 +39,10 @@ It would be beneficial for the individual to work on their time management skill
 Internal Note:
 Overall, the individual's technical expertise and proactive approach have been valuable to the team. However, improving time management skills would contribute to smoother project execution and timely deliverables.`,
         `Good things:
-        The individual consistently delivered high-quality code and adhered to coding best practices, ensuring the stability and maintainability of the software.
-        They effectively collaborated with team members, actively participating in code reviews and providing valuable feedback to enhance the overall quality of the project.
+        They delivered great code and following best practices, ensuring stability and maintainability.
+        They collaborated with team members very effectively, actively participating in PRs and providing useful feedback to make the overall quality of the project better.
     Area for improvement:
-        The individual could improve their written communication skills as there were instances where their code documentation lacked clarity and thorough explanations, making it challenging for others to understand and maintain.
+        Could improve their written communication skills. Sometimes their code documentation lacked clarity and explanations. It was challenging for others to understand and maintain.
     Internal Note:
     The individual's technical competence and collaborative nature greatly contributed to the success of the project. By sharpening their written communication skills, they can further enhance the team's productivity and collaboration.`,
         `- They demonstrated exceptional attention to detail by meticulously identifying and fixing numerous bugs in the software, leading to improved reliability and user experience.
